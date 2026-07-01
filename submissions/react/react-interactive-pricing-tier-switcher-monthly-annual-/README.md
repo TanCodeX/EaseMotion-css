@@ -1,61 +1,69 @@
-# React Component: Interactive Pricing Tier Switcher (Monthly/Annual) (#28010)
+# Interactive Pricing Tier Switcher (React Component)
 
-A modular, copy-paste ready React component for the EaseMotion CSS framework that renders a highly polished pricing table. It features a toggle switch with spring physics, animated number ticking when changing billing cycles, and responsive layout grids.
+A fully modular, copy-paste ready React component that provides a smooth, animated toggle between Monthly and Annual pricing tiers using EaseMotion CSS animations.
 
-## 📦 What's included?
+## Features
+- **State-driven Animations:** Cards gracefully re-animate (fade in, slide features) when switching between monthly and annual plans.
+- **Popular Tier Highlighting:** Automatically scales and highlights the "Most Popular" tier based on your configuration.
+- **EaseMotion Integration:** Uses standard `ease-` classes for hover lifts, glow effects, fades, and sliding elements.
+- **Zero Dependencies:** Relies purely on React (`useState`) and standard CSS.
 
-- `PricingSwitcher.jsx`: The React component that maps over the pricing tier data and manages the `billingCycle` state (monthly vs annual). Includes a sub-component (`<AnimatedPrice />`) that forces CSS animations on price changes using React `key` reconciliation.
-- `style.css`: The CSS stylesheet powering the tactile pill toggle, the "Most Popular" scale-up effect, hover states, and the `@keyframes` for the number ticking animation.
-- `demo.html`: A self-contained browser demo running the React component via Babel standalone, pre-loaded with standard SaaS pricing data.
+## Installation
 
-## 🛠 Features
+1. Copy `PricingTierSwitcher.jsx` into your React project components directory.
+2. Copy `style.css` (or integrate its contents into your global CSS).
+3. Ensure your project has the EaseMotion CSS framework linked (the component uses classes like `ease-fade-in-up`, `ease-slide-right`, and `ease-hover-lift`).
 
-- **Ticking Price Animation**: When the user switches between Monthly and Annual billing, the price numbers don't just instantly change text. They physically drop in from the top using a `cubic-bezier(0.34, 1.56, 0.64, 1)` spring animation combined with an opacity fade.
-- **Physical Toggle Switch**: The toggle pill uses CSS transforms on a nested white dot, allowing it to slide back and forth with overshoot physics.
-- **Floating Badges**: The "Save 20%" discount badge utilizes a continuous, infinite vertical floating animation (`easePricingFloat`) to draw the eye to the annual discount.
-- **Grid Auto-Layout**: The pricing cards utilize CSS Grid (`auto-fit`) to naturally stack vertically on mobile and sit side-by-side on desktop.
+## Component Props
 
-## 🚀 How to use
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `monthlyTiers` | Array of Objects | **Required** | The array defining the monthly pricing plans. |
+| `annualTiers` | Array of Objects | **Required** | The array defining the annual pricing plans. |
+| `currency` | String | `'$'` | The currency symbol to display before prices. |
+| `annualDiscountLabel` | String | `'Save 20%'` | Text shown in the discount badge on the annual toggle. |
 
-1. Copy `PricingSwitcher.jsx` into your React project's `components` directory.
-2. Copy `style.css` and import it into your global styles or alongside the component.
-3. Pass a `tiers` array containing the pricing data structure shown below.
+### Tier Object Schema
+```js
+{
+  name: String,        // e.g. "Basic"
+  price: String,       // e.g. "19"
+  description: String, // e.g. "Perfect for starters."
+  features: Array,     // Array of strings (e.g. ["1 User", "5GB Storage"])
+  isPopular: Boolean,  // Set true to highlight this card
+  buttonText: String   // e.g. "Start Free Trial"
+}
+```
+
+## Usage Example
 
 ```jsx
 import React from 'react';
-import PricingSwitcher from './PricingSwitcher';
-import './style.css'; 
+import PricingTierSwitcher from './PricingTierSwitcher';
 
-const PricingPage = () => {
-  const tiers = [
-    {
-      id: 'basic',
-      name: 'Basic',
-      description: 'For individuals.',
-      price: { monthly: 15, annual: 12 },
-      isPopular: false,
-      buttonText: 'Get Started',
-      features: ['Feature 1', 'Feature 2']
-    },
-    {
-      id: 'pro',
-      name: 'Pro',
-      description: 'For teams.',
-      price: { monthly: 49, annual: 39 },
-      isPopular: true,
-      buttonText: 'Start Trial',
-      features: ['Feature 1', 'Feature 2', 'Feature 3']
-    }
-  ];
+const monthlyTiers = [
+  { name: 'Basic', price: '19', description: 'Essential features for individuals.', features: ['1 User', '5 Projects', '10GB Storage'], isPopular: false, buttonText: 'Get Started' },
+  { name: 'Pro', price: '49', description: 'Advanced tools for growing teams.', features: ['5 Users', 'Unlimited Projects', '100GB Storage', 'Priority Support'], isPopular: true, buttonText: 'Start Free Trial' },
+  { name: 'Enterprise', price: '99', description: 'Maximum performance for large scaling.', features: ['Unlimited Users', 'Unlimited Projects', '1TB Storage', '24/7 Support'], isPopular: false, buttonText: 'Contact Sales' }
+];
 
-  return <PricingSwitcher tiers={tiers} />;
-};
+const annualTiers = [
+  { name: 'Basic', price: '15', description: 'Essential features for individuals.', features: ['1 User', '5 Projects', '10GB Storage'], is              Popular: false, buttonText: 'Get Started' },
+  { name: 'Pro', price: '39', description: 'Advanced tools for growing teams.', features: ['5 Users', 'Unlimited Projects', '100GB Storage', 'Priority Support'], isPopular: true, buttonText: 'Start Free Trial' },
+  { name: 'Enterprise', price: '79', description: 'Maximum performance for large scaling.', features: ['Unlimited Users', 'Unlimited Projects', '1TB Storage', '24/7 Support'], isPopular: false, buttonText: 'Contact Sales' }
+];
 
-export default PricingPage;
+function App() {
+  return (
+    <div style={{ background: '#f9fafb', minHeight: '100vh', padding: '50px 0' }}>
+      <PricingTierSwitcher 
+        monthlyTiers={monthlyTiers} 
+        annualTiers={annualTiers} 
+        annualDiscountLabel="Save 20% Annually"
+      />
+    </div>
+  );
+}
+
+export default App;
 ```
-
-## 🎨 Why this fits EaseMotion
-
-**EaseMotion** is about making UI elements feel physical and responsive to their context.
-
-Pricing tables are historically rigid. By coupling the CSS transforms with React's render lifecycle (using the `key={price}` trick to force re-mounting), we ensure that every single time the user clicks the toggle, the numbers physically fall into place. Combined with the spring-loaded toggle pill and the tactile hover lift of the cards themselves, it creates an enterprise-grade experience using zero external JS animation libraries.
