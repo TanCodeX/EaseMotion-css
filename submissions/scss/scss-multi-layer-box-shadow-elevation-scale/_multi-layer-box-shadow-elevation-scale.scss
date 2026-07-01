@@ -1,67 +1,68 @@
-// _multi-layer-box-shadow-elevation-scale.scss
-// EaseMotion CSS - Multi-Layer Box Shadow Elevation Scale
+// ==========================================================================
+// EaseMotion: Multi-Layer Box Shadow Elevation Scale
+// ==========================================================================
+// A robust, reusable mixin to generate smooth, natural-looking multi-layered 
+// drop shadows based on an elevation scale (1-5).
+// By combining multiple shadow layers, this utility produces a much softer, 
+// more realistic depth effect compared to standard single-layer shadows.
+// ==========================================================================
 
-/// Multi-Layer Box Shadow Elevation Mixin
-/// Generates a buttery-smooth, multi-layered box shadow based on material elevation principles,
-/// tailored for EaseMotion CSS's human-readable, animation-first philosophy.
-/// 
-/// @param {Number} $level - The elevation level (1 through 5, or 0 for none).
-/// @param {Color} $shadow-color - The base color of the shadow (defaults to a deep slate).
-/// @param {Number} $opacity-multiplier - A scale factor to darken or lighten the shadows (default 1).
-/// 
-/// @example scss
-///   .card {
-///     @include ease-elevation(3, rgba(15, 23, 42, 1));
-///     transition: box-shadow 0.3s ease;
-///     &:hover {
-///       @include ease-elevation(5);
-///     }
-///   }
+/// Generates a multi-layer box shadow for a given elevation level.
+/// @param {Number} $level - The elevation level (1 to 5). Defaults to 1.
+/// @param {Color} $color - The base color of the shadow. Defaults to black.
+/// @param {Number} $opacity-multiplier - Adjusts the overall opacity of the shadows. Defaults to 1.
+@mixin ease-elevation($level: 1, $color: #000000, $opacity-multiplier: 1) {
+  // Base opacities for the layers (umbra, penumbra, ambient)
+  $umbra-opacity: 0.05 * $opacity-multiplier;
+  $penumbra-opacity: 0.08 * $opacity-multiplier;
+  $ambient-opacity: 0.12 * $opacity-multiplier;
 
-@mixin ease-elevation($level: 1, $shadow-color: rgba(15, 23, 42, 1), $opacity-multiplier: 1) {
-  // Extract RGB components for alpha manipulation
-  $r: red($shadow-color);
-  $g: green($shadow-color);
-  $b: blue($shadow-color);
+  $umbra: rgba($color, $umbra-opacity);
+  $penumbra: rgba($color, $penumbra-opacity);
+  $ambient: rgba($color, $ambient-opacity);
 
-  @if $level == 0 {
-    box-shadow: none;
-  } @else if $level == 1 {
-    // Level 1: Subtle, resting state (e.g., standard cards)
+  @if $level == 1 {
+    // Subtle lift, good for cards or buttons in resting state
     box-shadow: 
-      0 1px 2px rgba($r, $g, $b, 0.05 * $opacity-multiplier),
-      0 1px 3px rgba($r, $g, $b, 0.10 * $opacity-multiplier);
+      0px 1px 2px $umbra, 
+      0px 1px 3px $penumbra, 
+      0px 0px 1px $ambient;
   } @else if $level == 2 {
-    // Level 2: Slightly raised (e.g., hover states on small elements)
+    // Standard lift, good for hovered cards or dropdown menus
     box-shadow: 
-      0 4px 6px -1px rgba($r, $g, $b, 0.10 * $opacity-multiplier),
-      0 2px 4px -2px rgba($r, $g, $b, 0.06 * $opacity-multiplier);
+      0px 3px 6px $umbra, 
+      0px 2px 8px $penumbra, 
+      0px 0px 3px $ambient;
   } @else if $level == 3 {
-    // Level 3: Elevated (e.g., dropdown menus, popovers)
+    // Medium elevation, good for modals or floating action buttons
     box-shadow: 
-      0 10px 15px -3px rgba($r, $g, $b, 0.10 * $opacity-multiplier),
-      0 4px 6px -4px rgba($r, $g, $b, 0.05 * $opacity-multiplier);
+      0px 10px 20px $umbra, 
+      0px 6px 12px $penumbra, 
+      0px 2px 4px $ambient;
   } @else if $level == 4 {
-    // Level 4: Highly elevated (e.g., floating action buttons, active states)
+    // High elevation, good for large popovers or navbars
     box-shadow: 
-      0 20px 25px -5px rgba($r, $g, $b, 0.10 * $opacity-multiplier),
-      0 8px 10px -6px rgba($r, $g, $b, 0.04 * $opacity-multiplier);
+      0px 15px 25px $umbra, 
+      0px 10px 20px $penumbra, 
+      0px 4px 8px $ambient;
   } @else if $level == 5 {
-    // Level 5: Maximum elevation (e.g., modals, bottom sheets)
-    // Uses 3 layers for maximum volumetric depth
+    // Maximum elevation, good for critical dialogs or extreme depth
     box-shadow: 
-      0 25px 50px -12px rgba($r, $g, $b, 0.25 * $opacity-multiplier),
-      0 10px 15px -5px rgba($r, $g, $b, 0.12 * $opacity-multiplier),
-      0 0 4px rgba($r, $g, $b, 0.05 * $opacity-multiplier);
+      0px 20px 40px $umbra, 
+      0px 15px 30px $penumbra, 
+      0px 5px 15px $ambient;
   } @else {
-    @warn "ease-elevation mixin: $level must be an integer between 0 and 5. Received: #{$level}.";
+    @warn "ease-elevation: Level `#{$level}` is out of bounds. Please use a level between 1 and 5.";
     box-shadow: none;
   }
 }
 
-/// Utility Classes Generation
-/// Generates `.ease-elevation-1` through `.ease-elevation-5`
-@for $i from 0 through 5 {
+// ==========================================================================
+// Auto-Generated Utility Classes
+// ==========================================================================
+// Generates standard utility classes (.ease-elevation-1 through .ease-elevation-5)
+// for immediate use in HTML markup.
+@for $i from 1 through 5 {
   .ease-elevation-#{$i} {
     @include ease-elevation($i);
   }
