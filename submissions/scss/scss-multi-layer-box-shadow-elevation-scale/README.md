@@ -1,53 +1,50 @@
-# SCSS Utility: Multi-Layer Box Shadow Elevation Scale (#28479)
+# Multi-Layer Box Shadow Elevation Scale
 
-A powerful SCSS mixin and utility class system designed for EaseMotion CSS that generates highly realistic, volumetric box shadows. It avoids the "flat" look of single-layer CSS shadows by stacking multiple layers of low-opacity drop shadows with varying blur radii and offsets.
+A reusable SCSS mixin and utility module that generates smooth, natural-looking multi-layered drop shadows to create a realistic sense of depth and elevation in your UI components.
 
-## 📦 What's included?
+## What does this do?
+Standard CSS box shadows often look harsh or unrealistic when using a single layer. This mixin combines multiple shadow layers (representing the umbra, penumbra, and ambient light) to create ultra-smooth gradients of shadow. It provides a standardized 5-level elevation scale.
 
-- `_multi-layer-box-shadow-elevation-scale.scss`: The raw SCSS partial containing the `@mixin ease-elevation` and a loop that generates `.ease-elevation-0` through `.ease-elevation-5` utility classes.
-- `style.css`: The compiled CSS output for demonstration purposes.
-- `demo.html`: A self-contained browser demo showcasing the 5 elevation levels and a physical hover transition effect.
+## How is it used?
+You can use the SCSS mixin directly in your styles or utilize the auto-generated utility classes.
 
-## 🛠 Features
+### Parameters
+- `$level` (Number): The elevation level between 1 and 5. (Default: `1`)
+- `$color` (Color): The base color of the shadow. (Default: `#000000`)
+- `$opacity-multiplier` (Number): A multiplier to increase or decrease the overall opacity of the shadow layers. (Default: `1`)
 
-- **Multi-Layer Depth**: Each elevation level uses 2 to 3 distinct `box-shadow` layers (an ambient shadow, a direct light shadow, and a crisp contact shadow on higher levels) to accurately mimic physical light.
-- **Parametric Mixin**: The `@mixin ease-elevation($level, $color, $opacity)` allows you to customize the color and intensity of the shadow based on your theme (e.g., using a darker shadow on dark mode, or a tinted shadow for colorful cards).
-- **Zero Dependencies**: Pure SCSS using standard CSS colors. No external pre-processors or JS needed.
-
-## 🚀 How to use
-
-**As a utility class (HTML):**
-
-Include the compiled CSS in your project and apply the classes directly to elements.
-
-```html
-<div class="ease-elevation-3">
-  I float above the background!
-</div>
-```
-
-**As an SCSS Mixin (in your stylesheets):**
-
-Import the partial into your main SCSS file and `@include` it for powerful hover effects.
-
+### Mixin Usage
 ```scss
 @import 'multi-layer-box-shadow-elevation-scale';
 
-.my-card {
+.card {
   background: white;
-  border-radius: 12px;
-  /* Start flat */
-  @include ease-elevation(1);
-  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-
+  @include ease-elevation(2); // Standard depth
+  transition: box-shadow 0.3s ease;
+  
   &:hover {
-    transform: translateY(-8px);
-    /* Elevate smoothly on hover, with a custom brand color tint */
-    @include ease-elevation(4, rgba(59, 130, 246, 1));
+    @include ease-elevation(4, #1a73e8, 1.2); // Colored, higher depth on hover
   }
 }
 ```
 
-## 🎨 Why this fits EaseMotion
+### Generated CSS Utility Classes
+The partial also generates a set of utility classes for immediate use in HTML:
 
-**EaseMotion** is all about fluid, physical interfaces. Single-layer box shadows look cheap and digital. Multi-layer box shadows look like real objects sitting on a physical desk. By combining these highly tuned, physically-based shadows with CSS transitions, elements on the screen feel like they have genuine weight and depth.
+```css
+.ease-elevation-1 { box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.05), ... }
+.ease-elevation-2 { box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.05), ... }
+.ease-elevation-3 { box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.05), ... }
+.ease-elevation-4 { box-shadow: 0px 15px 25px rgba(0, 0, 0, 0.05), ... }
+.ease-elevation-5 { box-shadow: 0px 20px 40px rgba(0, 0, 0, 0.05), ... }
+```
+
+HTML Example:
+```html
+<div class="ease-elevation-3">
+  I float above the page!
+</div>
+```
+
+## Why is it useful?
+This module seamlessly integrates into the EaseMotion philosophy by standardizing elevation and depth. By relying on a multi-layered approach, elements look more tactile and modern, directly improving the aesthetic quality of any design system built on top of EaseMotion.
